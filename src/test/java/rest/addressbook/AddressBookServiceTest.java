@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
