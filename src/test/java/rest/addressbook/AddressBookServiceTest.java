@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -16,10 +17,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.junit.After;
 import org.junit.Test;
-
-import rest.addressbook.AddressBook;
-import rest.addressbook.ApplicationConfig;
-import rest.addressbook.Person;
 
 /**
  * A simple test suite
@@ -60,9 +57,16 @@ public class AddressBookServiceTest {
 		juan.setName("Juan");
 		URI juanURI = URI.create("http://localhost:8282/contacts/person/1");
 
-		// Create a new user
-		Client client = ClientBuilder.newClient();
+                // GET AddressBook #1
+                Client client = ClientBuilder.newClient();
 		Response response = client.target("http://localhost:8282/contacts")
+				.request(MediaType.APPLICATION_JSON)
+				.get();
+                AddressBook addressBook = response.readEntity(AddressBook.class);
+                
+		// POST juan #1
+		client = ClientBuilder.newClient();
+		response = client.target("http://localhost:8282/contacts")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(juan, MediaType.APPLICATION_JSON));
 
@@ -88,7 +92,23 @@ public class AddressBookServiceTest {
 		// Verify that POST /contacts is well implemented by the service, i.e
 		// test that it is not safe and not idempotent
 		//////////////////////////////////////////////////////////////////////	
-				
+                
+                // GET AddressBook #2
+                response = client.target("http://localhost:8282/contacts").request(MediaType.APPLICATION_JSON).get();
+                AddressBook addressBookAux = response.readEntity(AddressBook.class);
+                assertNotEquals(addressBook.getPersonList(), addressBookAux.getPersonList());
+                addressBook = addressBookAux;
+                
+                // POST juan #2
+                response = client.target("http://localhost:8282/contacts").request(MediaType.APPLICATION_JSON)
+                        .post(Entity.entity(juan, MediaType.APPLICATION_JSON));
+                
+                // GET AddressBook #3
+                response = client.target("http://localhost:8282/contacts")
+				.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(juan, MediaType.APPLICATION_JSON));
+                addressBookAux = response.readEntity(AddressBook.class);
+                assertNotEquals(addressBook.getPersonList(), addressBookAux.getPersonList());
 	}
 
 	@Test
