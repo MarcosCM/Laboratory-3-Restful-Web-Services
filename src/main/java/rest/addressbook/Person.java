@@ -63,4 +63,12 @@ public class Person {
 	public URI getHref() {
 		return href;
 	}
+        
+        public boolean equals(Person p){
+            return this.getId() == p.getId() &&
+                    this.getName().equals(p.getName()) &&
+                    this.getEmail().equals(p.getEmail()) &&
+                    this.getHref().equals(p.getHref()) &&
+                    this.getPhoneList().equals(p.getPhoneList());
+        }
 }

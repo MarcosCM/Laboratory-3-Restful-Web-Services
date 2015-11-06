@@ -45,4 +45,9 @@ public class AddressBook {
 		nextId++;
 		return oldValue;
 	}
+        
+        public boolean equals(AddressBook ab){
+            return this.getNextId() == ab.getNextId() &&
+                    this.getPersonList().equals(ab.getPersonList());
+        }
 }
