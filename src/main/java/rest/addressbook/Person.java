@@ -64,11 +64,18 @@ public class Person {
 		return href;
 	}
         
-        public boolean equals(Person p){
-            return this.getId() == p.getId() &&
-                    this.getName().equals(p.getName()) &&
-                    this.getEmail().equals(p.getEmail()) &&
-                    this.getHref().equals(p.getHref()) &&
-                    this.getPhoneList().equals(p.getPhoneList());
+        @Override
+        public boolean equals(Object obj){
+            if (obj instanceof Person){
+                Person p = (Person) obj;
+                return this.getId() == p.getId() &&
+                        ((this.getName() == null && p.getName() == null) || (this.getName() != null && p.getName() != null && this.getName().equals(p.getName()))) &&
+                        ((this.getEmail() == null && p.getEmail() == null) || (this.getEmail() != null && p.getEmail() != null && this.getEmail().equals(p.getEmail()))) &&
+                        ((this.getHref() == null && p.getHref() == null) || (this.getHref() != null && p.getHref() != null && this.getHref().equals(p.getHref()))) &&
+                        this.getPhoneList().equals(p.getPhoneList());
+            }
+            else{
+                return false;
+            }
         }
 }

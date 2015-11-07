@@ -46,8 +46,15 @@ public class AddressBook {
 		return oldValue;
 	}
         
-        public boolean equals(AddressBook ab){
-            return this.getNextId() == ab.getNextId() &&
-                    this.getPersonList().equals(ab.getPersonList());
+        @Override
+        public boolean equals(Object obj){
+            if (obj instanceof AddressBook){
+                AddressBook ab = (AddressBook) obj;
+                return this.getNextId() == ab.getNextId() &&
+                        this.getPersonList().equals(ab.getPersonList());
+            }
+            else{
+                return false;
+            }
         }
 }
